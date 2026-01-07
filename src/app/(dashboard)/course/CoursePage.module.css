@@ -1,0 +1,172 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: 48px;
+}
+
+.header h1 {
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: var(--color-primary-soft);
+    margin-bottom: 24px;
+}
+
+.mainProgress {
+    background: var(--color-secondary);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+}
+
+.progressLabel {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
+.progressBar {
+    height: 8px;
+    background: var(--color-secondary-soft);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding-left: 16px;
+}
+
+.moduleWrapper {
+    display: flex;
+    gap: 24px;
+    position: relative;
+}
+
+/* Connector Line Logic - slightly tricky with pure CSS but doable */
+.connectorLine {
+    position: absolute;
+    left: 15px;
+    /* Half of icon size roughly */
+    top: 32px;
+    bottom: -32px;
+    width: 2px;
+    background: var(--color-secondary-soft);
+    z-index: 0;
+}
+
+.moduleWrapper:last-child .connectorLine {
+    display: none;
+}
+
+.statusIcon {
+    position: relative;
+    z-index: 1;
+    background: var(--color-secondary-soft);
+    /* To hide line behind it */
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4px;
+    /* Align with card title */
+    width: 32px;
+    height: 32px;
+}
+
+.iconCompleted {
+    color: var(--color-primary);
+    fill: var(--color-secondary);
+}
+
+.iconLocked {
+    color: #ccc;
+}
+
+.iconCurrent {
+    color: var(--color-accent);
+    fill: var(--color-accent);
+}
+
+.moduleCard {
+    flex: 1;
+    border-left: 4px solid transparent;
+}
+
+.completed {
+    opacity: 0.8;
+}
+
+.in-progress {
+    border-left-color: var(--color-accent);
+}
+
+.locked {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+.moduleHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.moduleTitle {
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+}
+
+.moduleMeta {
+    color: var(--color-primary-soft);
+    font-size: 0.875rem;
+}
+
+.lessonList {
+    background: var(--color-secondary-soft);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lessonRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--color-primary);
+}
+
+.lessonCheck {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--color-primary-soft);
+    border-radius: 50%;
+}
+
+.lessonCheck.done {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
