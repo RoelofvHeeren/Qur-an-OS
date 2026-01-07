@@ -11,6 +11,8 @@
     padding-bottom: 96px;
     /* Space for bottom nav on mobile */
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 @media (min-width: 768px) {
