@@ -32,7 +32,7 @@ type PageData = {
 };
 
 // Configuration
-const MAX_CHARS_PER_PAGE = 725; // Adjusted for perfect balance
+const MAX_CHARS_PER_PAGE = 600; // Drastically reduced for guaranteed whitespace
 
 export default function ReadingPage() {
     console.log("[QuranOS] BookView Upgrade v3 Loaded");
@@ -99,9 +99,9 @@ export default function ReadingPage() {
                         <div className="w-full h-full px-12 py-16 flex flex-col items-center overflow-hidden">
                             <div className="w-full max-w-xl h-full flex flex-col">
                                 {page.surahInfo && (
-                                    <div className="mb-12 text-center border-b-2 border-primary/10 pb-8 shrink-0">
+                                    <div className="mb-12 text-center border-b-2 border-gray-100 pb-8 shrink-0">
                                         <div className="flex items-center justify-center gap-3 mb-4">
-                                            <span className="text-xs font-bold tracking-[0.2em] text-primary/60 uppercase bg-primary/5 px-2 py-1 rounded">Surah {page.surahInfo.number}</span>
+                                            <span className="text-xs font-bold tracking-[0.2em] text-gray-600 uppercase bg-gray-100 px-3 py-1.5 rounded-full">Surah {page.surahInfo.number}</span>
                                         </div>
                                         <h2 className="text-5xl font-serif text-primary mb-3">
                                             {page.surahInfo.name}
