@@ -59,10 +59,14 @@ export default function PDFReader() {
                     <BookView
                         totalPages={numPages}
                         renderPage={(index) => (
-                            <PDFPageRenderer
-                                pageNumber={index + 1}
-                                width={450}
-                            />
+                            // DEBUG: Testing if BookView works without PDFPageRenderer
+                            // <PDFPageRenderer 
+                            //     pageNumber={index + 1} 
+                            //     width={450} 
+                            // />
+                            <div className="flex items-center justify-center w-full h-full bg-gray-100 text-black font-bold text-xl">
+                                Page {index + 1}
+                            </div>
                         )}
                     />
                 ) : (
