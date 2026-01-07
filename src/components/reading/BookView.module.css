@@ -1,0 +1,183 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 40px 0;
+    perspective: 1500px;
+    /* Essential for 3D effect */
+    overflow: hidden;
+}
+
+.bookStage {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    /* Max spread width */
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+}
+
+.book {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    /* Background behind the pages if needed, but pages handle their own bg */
+}
+
+/* Page Components */
+.page {
+    width: 50%;
+    height: 100%;
+    background: #FFFDF9;
+    /* Creamy paper */
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #EAE6DF;
+}
+
+.pageLeft {
+    left: 0;
+    border-radius: 4px 0 0 4px;
+}
+
+.pageRight {
+    right: 0;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Flipping Logic */
+.flippingPage {
+    left: 50%;
+    /* Starts at spine */
+    width: 50%;
+    transform-style: preserve-3d;
+    background: transparent;
+    border: none;
+}
+
+.pageFront,
+.pageBack {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #FFFDF9;
+    backface-visibility: hidden;
+    /* Key for double-sided */
+    border: 1px solid #EAE6DF;
+}
+
+.pageBack {
+    transform: rotateY(180deg);
+    border-radius: 4px 0 0 4px;
+    /* Looks like left page when flipped */
+}
+
+.pageFront {
+    border-radius: 0 4px 4px 0;
+    /* Looks like right page */
+}
+
+/* Content Area inside Page */
+.pageContent {
+    padding: 48px;
+    height: 100%;
+    position: relative;
+    /* Paper Texture/Grain could go here */
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 0%, transparent 5%, transparent 95%, rgba(0, 0, 0, 0.02) 100%);
+}
+
+.pageNumber {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-primary);
+    color: var(--color-primary-soft);
+    font-size: 0.875rem;
+}
+
+/* Spine Shadow */
+.spine {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    transform: translateX(-50%);
+    background: linear-gradient(to right,
+            transparent 0%,
+            rgba(0, 0, 0, 0.1) 40%,
+            rgba(0, 0, 0, 0.15) 50%,
+            rgba(0, 0, 0, 0.1) 60%,
+            transparent 100%);
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Controls */
+.navBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--color-primary-soft);
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-primary);
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navBtn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.navBtn:hover:not(:disabled) {
+    background: var(--color-primary);
+    color: white;
+}
+
+.prevBtn {
+    left: -28px;
+}
+
+.nextBtn {
+    right: -28px;
+}
+
+@media (max-width: 1024px) {
+
+    /* Mobile / Tablet fallback - simplified view */
+    .book {
+        box-shadow: none;
+    }
+
+    .page {
+        width: 100%;
+        position: relative;
+        border-radius: 8px;
+    }
+
+    .pageLeft {
+        display: none;
+    }
+
+    /* Show only one page on mobile? Logic needs adjusting for mobile */
+    /* For this prompt, focusing on desktop dual-page as requested */
+}
