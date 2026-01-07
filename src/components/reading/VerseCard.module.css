@@ -1,0 +1,49 @@
+.card {
+    padding: 32px;
+    background-color: var(--color-secondary);
+    border-bottom: 1px solid var(--color-secondary-soft);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.card:hover {
+    background-color: rgba(247, 245, 243, 0.5);
+    /* Soft white tint */
+}
+
+.heading {
+    margin-bottom: 24px;
+}
+
+.verseNumber {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-primary-soft);
+    background: var(--color-secondary-soft);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+}
+
+.arabic {
+    font-family: serif;
+    /* Should be a proper arabic font later */
+    font-size: 2rem;
+    line-height: 2.5;
+    text-align: right;
+    margin-bottom: 24px;
+    color: #000;
+    /* Arabic text usually needs high contrast */
+    direction: rtl;
+}
+
+.translation {
+    font-family: var(--font-primary);
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.active {
+    background-color: var(--color-secondary-soft);
+    border-left: 4px solid var(--color-accent);
+}

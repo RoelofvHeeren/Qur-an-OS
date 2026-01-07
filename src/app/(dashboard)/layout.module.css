@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    /* background color is set on body in globals.css */
+}
+
+.main {
+    flex: 1;
+    margin-left: 0;
+    padding: 24px;
+    padding-bottom: 96px;
+    /* Space for bottom nav on mobile */
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .main {
+        margin-left: 280px;
+        /* Sidebar width from Sidebar.module.css */
+        padding: 32px;
+        padding-bottom: 32px;
+    }
+}

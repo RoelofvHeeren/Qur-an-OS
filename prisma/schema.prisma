@@ -1,0 +1,98 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notes          Note[]
+  reflections    Reflection[]
+  highlights     Highlight[]
+  quizAttempts   QuizAttempt[]
+  courseProgress CourseProgress[]
+  memoryFlags    MemoryFlag[]
+}
+
+model Verse {
+  id          Int    @id @default(autoincrement())
+  surahNumber Int
+  verseNumber Int
+  text        String // Arabic text
+  translation String // English translation
+
+  notes      Note[]
+  highlights Highlight[]
+
+  @@unique([surahNumber, verseNumber])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  verseId Int?
+  verse   Verse? @relation(fields: [verseId], references: [id])
+}
+
+model Reflection {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Highlight {
+  id        String   @id @default(cuid())
+  color     String // e.g., "gold", "maroon"
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  verseId Int
+  verse   Verse @relation(fields: [verseId], references: [id])
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  score       Int
+  completedAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model CourseProgress {
+  id       String @id @default(cuid())
+  progress Int // Percentage or step number
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model MemoryFlag {
+  id         String   @id @default(cuid())
+  conceptTag String
+  struggled  Boolean
+  timestamp  DateTime @default(now())
+  source     String // "quiz", "question", "note"
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}

@@ -1,0 +1,76 @@
+.container {
+    display: flex;
+    height: calc(100vh - 64px);
+    /* Adjust for header if exists, or full height */
+    /* If inside layout Main, layout handles margins. ReadingView should probably fill height. */
+    height: 100%;
+    gap: 24px;
+}
+
+.listPanel {
+    flex: 1;
+    background: var(--color-secondary);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--color-secondary-soft);
+    position: sticky;
+    top: 0;
+    background: var(--color-secondary);
+    z-index: 10;
+}
+
+.header h2 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+.subtitle {
+    color: var(--color-primary-soft);
+    font-size: 0.875rem;
+}
+
+.verses {
+    flex: 1;
+}
+
+.contextPanel {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .contextPanel {
+        display: block;
+        width: 350px;
+        background: var(--color-secondary);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card);
+        padding: 24px;
+    }
+}
+
+.contextContent {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.emptyState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--color-primary-soft);
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}

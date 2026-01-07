@@ -1,0 +1,86 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    font-family: var(--font-primary);
+    /* "No scaling animations" - ok, respecting that */
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Variants */
+.primary {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+}
+
+.primary:hover:not(:disabled) {
+    /* "Slight brightness increase, Subtle shadow increase" */
+    filter: brightness(1.1);
+    box-shadow: var(--shadow-hover);
+    color: var(--color-accent);
+    /* Gold accent on hover */
+}
+
+.primary:active:not(:disabled) {
+    filter: brightness(0.95);
+}
+
+.secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-soft);
+}
+
+.secondary:hover {
+    background-color: var(--color-secondary-soft);
+}
+
+.outline {
+    background-color: transparent;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.outline:hover {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+}
+
+.ghost {
+    background-color: transparent;
+    color: var(--color-primary);
+}
+
+.ghost:hover {
+    background-color: var(--color-secondary-soft);
+}
+
+/* Sizes */
+.sm {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+}
+
+.md {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+
+.lg {
+    padding: 16px 32px;
+    font-size: 1.125rem;
+}
+
+.icon {
+    margin-right: 8px;
+    display: flex;
+}

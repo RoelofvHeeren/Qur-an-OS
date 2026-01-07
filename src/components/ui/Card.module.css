@@ -1,0 +1,13 @@
+.card {
+    background-color: var(--color-secondary);
+    border-radius: var(--radius-card);
+    /* 12px */
+    box-shadow: var(--shadow-card);
+    padding: 24px;
+    transition: box-shadow 0.3s ease;
+    /* "Feels carved, not hovering" - soft shadow handles this. */
+}
+
+/* Maybe add a hover effect if interactive? 
+   The prompt says "Soft shadow, not floating panels".
+*/
