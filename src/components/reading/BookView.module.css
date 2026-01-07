@@ -71,6 +71,7 @@
     width: 100%;
     height: 100%;
     background: #FFFDF9;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     border: 1px solid #EAE6DF;
 }

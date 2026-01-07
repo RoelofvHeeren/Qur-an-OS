@@ -113,8 +113,8 @@ export function BookView({ totalPages, renderPage }: BookViewProps) {
                     {/* Static Pages */}
                     <div className={clsx(styles.page, styles.pageLeft)}>
                         <div className={styles.pageContent}>
-                            {renderPage(currentPage)}
-                            <span className={styles.pageNumber}>{currentPage + 1}</span>
+                            {renderPage(isFlipping && direction === "prev" ? currentPage - 2 : currentPage)}
+                            <span className={styles.pageNumber}>{(isFlipping && direction === "prev" ? currentPage - 2 : currentPage) + 1}</span>
                             {/* Drag Handle for Prev */}
                             <div
                                 className={styles.dragHandleLeft}
@@ -125,8 +125,8 @@ export function BookView({ totalPages, renderPage }: BookViewProps) {
 
                     <div className={clsx(styles.page, styles.pageRight)}>
                         <div className={styles.pageContent}>
-                            {renderPage(currentPage + 1)}
-                            <span className={styles.pageNumber}>{currentPage + 2}</span>
+                            {renderPage(isFlipping && direction === "next" ? currentPage + 3 : currentPage + 1)}
+                            <span className={styles.pageNumber}>{(isFlipping && direction === "next" ? currentPage + 3 : currentPage + 1) + 1}</span>
                             {/* Drag Handle for Next */}
                             <div
                                 className={styles.dragHandleRight}
@@ -190,15 +190,15 @@ export function BookView({ totalPages, renderPage }: BookViewProps) {
                             >
                                 <div className={styles.pageBack}>
                                     <div className={styles.pageContent}>
-                                        {renderPage(currentPage + 1)}
-                                        <span className={styles.pageNumber}>{currentPage + 2}</span>
+                                        {renderPage(currentPage)}
+                                        <span className={styles.pageNumber}>{currentPage + 1}</span>
                                     </div>
                                 </div>
 
                                 <div className={styles.pageFront}>
                                     <div className={styles.pageContent}>
-                                        {renderPage(currentPage)}
-                                        <span className={styles.pageNumber}>{currentPage + 1}</span>
+                                        {renderPage(currentPage - 1)}
+                                        <span className={styles.pageNumber}>{currentPage}</span>
                                     </div>
                                 </div>
                             </motion.div>
