@@ -1,6 +1,7 @@
 
 const { chromium } = require('playwright');
 const { Client } = require('pg');
+const fs = require('fs');
 require('dotenv').config({ path: '../.env' });
 
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -63,8 +64,20 @@ async function setupDatabase() {
 }
 
 async function scrapeSurah(page, surahNumber) {
-    const url = `${BASE_URL}?chapter=${surahNumber}&paragraph=1&type=Ghamidi`;
+    // Force English language via URL parameter
+    const url = `${BASE_URL}?chapter=${surahNumber}&paragraph=1&type=Ghamidi&language=en`;
     console.log(`\nNavigating to Surah ${surahNumber}: ${url}`);
+
+    // Update status
+    try {
+        fs.writeFileSync('status.json', JSON.stringify({
+            surah: surahNumber,
+            status: 'Navigating',
+            paragraph: 0,
+            total_paragraphs: 0,
+            timestamp: Date.now()
+        }));
+    } catch (e) { }
 
     let attempts = 0;
     while (attempts < 3) {
@@ -87,20 +100,28 @@ async function scrapeSurah(page, surahNumber) {
 
     await autoScroll(page);
 
-    // Metadata
-    const surahNameElement = page.locator('a.mat-mdc-menu-trigger').nth(3);
-    const surahNameRaw = await surahNameElement.textContent().catch(() => '');
+    // Metadata - Improved selectors based on subagent findings
     let nameArabic = '';
     let nameEnglish = '';
-    if (surahNameRaw) {
-        const parts = surahNameRaw.split('-').map(s => s.trim());
-        if (parts.length > 1) {
-            nameEnglish = parts[0].replace(/^[0-9]+\.\s*/, '');
-            nameArabic = parts[1];
-        } else {
-            nameEnglish = surahNameRaw;
+
+    try {
+        // Try precise selectors first
+        const surahTriggers = await page.locator('a.mat-mdc-menu-trigger').all();
+        // Look for the one that likely contains the Surah name (checking index 4 as per findings, or content)
+        for (const trigger of surahTriggers) {
+            const txt = await trigger.textContent();
+            if (txt && (txt.includes('Al-') || txt.includes('Surah') || txt.match(/^\d+\./))) {
+                const parts = txt.split('-').map(s => s.trim());
+                if (parts.length > 1) {
+                    nameEnglish = parts[0].replace(/^[0-9]+\.\s*/, '');
+                    nameArabic = parts[1];
+                } else {
+                    nameEnglish = txt;
+                }
+                break;
+            }
         }
-    }
+    } catch (e) { console.warn("Metadata extraction warning:", e); }
 
     // Intro
     let introduction = '';
@@ -132,6 +153,18 @@ async function scrapeSurah(page, surahNumber) {
     for (let i = 0; i < pCount; i++) {
         if ((i + 1) % 10 === 0 || i === 0) console.log(`  > Processing Paragraph ${i + 1} of ${pCount}...`);
 
+        // Update status Loop
+        try {
+            fs.writeFileSync('status.json', JSON.stringify({
+                surah: surahNumber,
+                surahName: nameEnglish,
+                status: 'Processing',
+                paragraph: i + 1,
+                total_paragraphs: pCount,
+                timestamp: Date.now()
+            }));
+        } catch (e) { }
+
         const pLoc = paragraphsLocator.nth(i);
 
         // Section Title
@@ -141,29 +174,32 @@ async function scrapeSurah(page, surahNumber) {
         const arabicBlock = pLoc.locator('.cnt-ar').first();
         const arabicTextFull = await arabicBlock.textContent().catch(() => '');
 
-        // Translation
+        // Translation - CRITICAL FIX: Ensure we get LTR content which is English
         const translationBlock = pLoc.locator('div[style*="direction: ltr"]').first();
         const translationTextFull = await translationBlock.innerText().catch(() => '');
 
-        // Footnotes
+        if (!translationTextFull) {
+            // Last ditch check - maybe the English didn't load?
+            // console.warn(`Warning: Empty translation for paragraph ${i+1}`);
+        }
+
+        // Footnotes - Optimized
         let footnotes = [];
         const fnBtn = pLoc.locator('button').filter({ hasText: /Footnotes|فوٹ نوٹ/ }).first();
 
-        // Check visible count to avoid waiting
         if (await fnBtn.count() > 0 && await fnBtn.isVisible()) {
             try {
                 await fnBtn.scrollIntoViewIfNeeded();
-                await fnBtn.click({ timeout: 5000 });
-                try {
-                    await page.waitForSelector('div.mat-mdc-dialog-content', { timeout: 3000 });
-                    const fnText = await page.locator('div.mat-mdc-dialog-content').innerText();
-                    footnotes = parseFootnotes(fnText);
-                    await page.keyboard.press('Escape');
-                    await page.waitForTimeout(100);
-                } catch (e) {
-                    await page.keyboard.press('Escape');
-                }
-            } catch (e) { }
+                await fnBtn.click({ timeout: 1000 });
+                const dialog = page.locator('div.mat-mdc-dialog-content');
+                await dialog.waitFor({ state: 'visible', timeout: 2000 });
+                const fnText = await dialog.innerText();
+                footnotes = parseFootnotes(fnText);
+                await page.keyboard.press('Escape');
+                await page.waitForTimeout(100);
+            } catch (e) {
+                try { await page.keyboard.press('Escape'); } catch (k) { }
+            }
         }
 
         const ayahs = parseAyahs(arabicTextFull, translationTextFull, footnotes);
@@ -196,7 +232,6 @@ async function scrapeSurah(page, surahNumber) {
 }
 
 function parseAyahs(arabicFull, transFull, footnotesAll) {
-    // Regex including Extended Arabic-Indic digits (Urdu/Persian style)
     const ayahSplitter = /﴿[\d\u0660-\u0669\u06F0-\u06F9]+﴾/g;
     const markers = arabicFull.match(ayahSplitter) || [];
     const parts = arabicFull.split(ayahSplitter);
@@ -275,6 +310,7 @@ async function autoScroll(page) {
 
                 await client.query('BEGIN');
 
+                // Delete existing to support idempotency/re-runs
                 await client.query('DELETE FROM surahs WHERE number = $1', [surahData.number]);
 
                 const surahRes = await client.query(

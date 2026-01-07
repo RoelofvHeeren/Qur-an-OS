@@ -1,3 +1,4 @@
+/* Existing styles */
 .container {
     display: flex;
     justify-content: center;
@@ -5,41 +6,43 @@
     height: 100%;
     padding: 40px 0;
     perspective: 1500px;
-    /* Essential for 3D effect */
     overflow: hidden;
 }
 
 .bookStage {
     position: relative;
-    width: 100%;
-    max-width: 1200px;
-    /* Max spread width */
-    height: 85vh;
+    width: 90%;
+    max-width: 1100px;
+    height: 80vh;
     display: flex;
     justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
 }
 
 .book {
     position: relative;
     display: flex;
     width: 100%;
-    height: 100%;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-    /* Background behind the pages if needed, but pages handle their own bg */
+    aspect-ratio: 1.5;
+    height: auto;
+    max-height: 100%;
+    transform: rotateX(10deg);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
 }
 
-/* Page Components */
 .page {
     width: 50%;
     height: 100%;
     background: #FFFDF9;
-    /* Creamy paper */
     position: absolute;
     top: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     border: 1px solid #EAE6DF;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.02), 0 1px 0 #CCC, 0 2px 0 #CCC, 0 3px 0 #CCC, 0 4px 0 #CCC, 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .pageLeft {
@@ -52,10 +55,8 @@
     border-radius: 0 4px 4px 0;
 }
 
-/* Flipping Logic */
 .flippingPage {
     left: 50%;
-    /* Starts at spine */
     width: 50%;
     transform-style: preserve-3d;
     background: transparent;
@@ -71,41 +72,62 @@
     height: 100%;
     background: #FFFDF9;
     backface-visibility: hidden;
-    /* Key for double-sided */
     border: 1px solid #EAE6DF;
 }
 
 .pageBack {
     transform: rotateY(180deg);
     border-radius: 4px 0 0 4px;
-    /* Looks like left page when flipped */
 }
 
 .pageFront {
     border-radius: 0 4px 4px 0;
-    /* Looks like right page */
 }
 
-/* Content Area inside Page */
 .pageContent {
-    padding: 48px;
+    padding: 24px;
+    /* Reduced padding for PDF visibility */
     height: 100%;
     position: relative;
-    /* Paper Texture/Grain could go here */
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 0%, transparent 5%, transparent 95%, rgba(0, 0, 0, 0.02) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* PDF Specific Styles */
+.pdfPageContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.reactPdfPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reactPdfPage canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .pageNumber {
     position: absolute;
-    bottom: 24px;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-primary);
     color: var(--color-primary-soft);
     font-size: 0.875rem;
+    z-index: 5;
 }
 
-/* Spine Shadow */
 .spine {
     position: absolute;
     left: 50%;
@@ -113,17 +135,11 @@
     bottom: 0;
     width: 60px;
     transform: translateX(-50%);
-    background: linear-gradient(to right,
-            transparent 0%,
-            rgba(0, 0, 0, 0.1) 40%,
-            rgba(0, 0, 0, 0.15) 50%,
-            rgba(0, 0, 0, 0.1) 60%,
-            transparent 100%);
+    background: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.1) 60%, transparent 100%);
     pointer-events: none;
     z-index: 20;
 }
 
-/* Controls */
 .navBtn {
     position: absolute;
     top: 50%;
@@ -154,16 +170,37 @@
 }
 
 .prevBtn {
-    left: -28px;
+    left: -60px;
 }
 
 .nextBtn {
-    right: -28px;
+    right: -60px;
+}
+
+.dragHandleRight,
+.dragHandleLeft {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    z-index: 10;
+    cursor: grab;
+}
+
+.dragHandleRight {
+    right: 0;
+}
+
+.dragHandleLeft {
+    left: 0;
+}
+
+.dragHandleRight:active,
+.dragHandleLeft:active {
+    cursor: grabbing;
 }
 
 @media (max-width: 1024px) {
-
-    /* Mobile / Tablet fallback - simplified view */
     .book {
         box-shadow: none;
     }
@@ -177,7 +214,4 @@
     .pageLeft {
         display: none;
     }
-
-    /* Show only one page on mobile? Logic needs adjusting for mobile */
-    /* For this prompt, focusing on desktop dual-page as requested */
 }
