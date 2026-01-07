@@ -32,7 +32,7 @@ type PageData = {
 };
 
 // Configuration
-const MAX_CHARS_PER_PAGE = 750; // Reduced for maximum whitespace and focus
+const MAX_CHARS_PER_PAGE = 725; // Adjusted for perfect balance
 
 export default function ReadingPage() {
     // Transform Quran Data into Pages
