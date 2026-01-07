@@ -80,17 +80,13 @@
 
 .pageFront {
     z-index: 2;
-    /* Always strictly on top of back in DOM order consideration */
+    border-radius: 0 4px 4px 0;
 }
 
 .pageBack {
     transform: rotateY(180deg);
     border-radius: 4px 0 0 4px;
     z-index: 1;
-}
-
-.pageFront {
-    border-radius: 0 4px 4px 0;
 }
 
 .pageContent {

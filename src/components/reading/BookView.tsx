@@ -125,8 +125,8 @@ export function BookView({ totalPages, renderPage }: BookViewProps) {
 
                     <div className={clsx(styles.page, styles.pageRight)}>
                         <div className={styles.pageContent}>
-                            {renderPage(isFlipping && direction === "next" ? currentPage + 3 : currentPage + 1)}
-                            <span className={styles.pageNumber}>{(isFlipping && direction === "next" ? currentPage + 3 : currentPage + 1) + 1}</span>
+                            {renderPage(isFlipping ? (direction === "next" ? currentPage + 3 : currentPage - 1) : currentPage + 1)}
+                            <span className={styles.pageNumber}>{(isFlipping ? (direction === "next" ? currentPage + 3 : currentPage - 1) : currentPage + 1) + 1}</span>
                             {/* Drag Handle for Next */}
                             <div
                                 className={styles.dragHandleRight}
