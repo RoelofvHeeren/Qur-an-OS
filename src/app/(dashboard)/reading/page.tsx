@@ -32,7 +32,7 @@ type PageData = {
 };
 
 // Configuration
-const MAX_CHARS_PER_PAGE = 1100; // Tweaked to prevent overflow
+const MAX_CHARS_PER_PAGE = 750; // Reduced for maximum whitespace and focus
 
 export default function ReadingPage() {
     // Transform Quran Data into Pages
@@ -42,11 +42,6 @@ export default function ReadingPage() {
         (quranData as Surah[]).forEach((surah) => {
             const totalVerses = surah.verses.length;
             let currentVerseIndex = 0;
-
-            // Handle Introduction
-            // If Introduction is very long, it might take a whole page or multiple pages
-            // For now, we assume intro fits on one page, possibly with few verses.
-
             let firstPage = true;
 
             while (currentVerseIndex < totalVerses || firstPage) {
@@ -61,24 +56,21 @@ export default function ReadingPage() {
                         number: surah.number,
                         intro: surah.intro
                     };
-                    currentWeight += (surah.intro ? surah.intro.length : 0) + 300; // Header overhead
+                    // Increase header weight impact
+                    currentWeight += (surah.intro ? surah.intro.length : 0) + 400;
                     firstPage = false;
 
-                    // If Intro is massive, we might not fit any verses.
-                    // But if it's empty surah (sanity), break.
                     if (totalVerses === 0) {
                         allPages.push({ verses: [], surahInfo });
                         break;
                     }
                 }
 
-                // Add verses until full
                 while (currentVerseIndex < totalVerses) {
                     const verse = surah.verses[currentVerseIndex];
-                    const verseWeight = verse.text.length + 80; // Increased weight per verse for more padding
+                    const verseWeight = verse.text.length + 150; // High padding weight
 
                     if (currentWeight + verseWeight > MAX_CHARS_PER_PAGE && pageVerses.length > 0) {
-                        // Page full
                         break;
                     }
 
@@ -87,10 +79,7 @@ export default function ReadingPage() {
                     currentVerseIndex++;
                 }
 
-                allPages.push({
-                    verses: pageVerses,
-                    surahInfo: surahInfo
-                });
+                allPages.push({ verses: pageVerses, surahInfo: surahInfo });
             }
         });
 
@@ -103,40 +92,37 @@ export default function ReadingPage() {
                 totalPages={pages.length}
                 renderPage={(index) => {
                     const page = pages[index];
-                    // Even/Odd page logic for styling (margins). 
-                    // BookView puts margins: Left Page (Right Margin), Right Page (Left Margin) mainly visually.
-                    // We just center content.
+                    if (!page) return <div className="w-full h-full bg-[#FFFDF9]" />;
 
-                    // Calculate if we need vertical scroll just in case (as safety)
                     return (
-                        <div className="w-full h-full px-12 py-12 flex flex-col items-center overflow-hidden">
+                        <div className="w-full h-full px-12 py-16 flex flex-col items-center overflow-hidden">
                             <div className="w-full max-w-xl h-full flex flex-col">
                                 {page.surahInfo && (
-                                    <div className="mb-8 text-center border-b border-gray-100 pb-6 shrink-0">
-                                        <div className="flex items-center justify-center gap-3 mb-2">
-                                            <span className="text-xs font-bold tracking-widest text-primary/60 uppercase">Surah {page.surahInfo.number}</span>
+                                    <div className="mb-12 text-center border-b-2 border-primary/10 pb-8 shrink-0">
+                                        <div className="flex items-center justify-center gap-3 mb-4">
+                                            <span className="text-xs font-bold tracking-[0.2em] text-primary/60 uppercase bg-primary/5 px-2 py-1 rounded">Surah {page.surahInfo.number}</span>
                                         </div>
-                                        <h2 className="text-4xl font-serif text-primary mb-2">
+                                        <h2 className="text-5xl font-serif text-primary mb-3">
                                             {page.surahInfo.name}
                                         </h2>
-                                        <h3 className="text-xl font-arabic text-primary-soft mb-4 dir-rtl">
+                                        <h3 className="text-2xl font-arabic text-primary-soft mb-6 dir-rtl opacity-80">
                                             {page.surahInfo.arabicName}
                                         </h3>
                                         {page.surahInfo.intro && (
-                                            <p className="text-sm text-gray-500 italic leading-relaxed text-justify px-4">
+                                            <p className="text-base text-gray-500 italic leading-loose text-justify px-4 font-serif">
                                                 {page.surahInfo.intro}
                                             </p>
                                         )}
                                     </div>
                                 )}
 
-                                <div className="space-y-6 flex-1 overflow-y-auto pr-2 scrollbar-thin">
+                                <div className="flex-1 overflow-y-auto pr-4 scrollbar-thin">
                                     {page.verses.map((v) => (
-                                        <div key={v.id} className="relative pl-10 group">
-                                            <span className="absolute left-0 top-1 w-8 h-8 flex items-center justify-center border border-primary/20 bg-primary/5 text-primary text-xs font-serif rounded-full group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                                        <div key={v.id} className="relative mb-10 pl-14 group">
+                                            <span className="absolute left-0 top-1 w-10 h-10 flex items-center justify-center border-2 border-primary/10 bg-white text-primary text-sm font-serif rounded-full shadow-sm group-hover:border-primary/50 group-hover:text-primary-dark transition-all duration-300">
                                                 {v.verse}
                                             </span>
-                                            <p className="text-lg leading-loose text-gray-800 font-reading">
+                                            <p className="text-xl leading-[2.2] text-gray-800 font-reading tracking-wide">
                                                 {v.text}
                                             </p>
                                         </div>

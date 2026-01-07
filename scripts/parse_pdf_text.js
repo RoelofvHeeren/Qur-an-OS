@@ -5,7 +5,8 @@ const inputPath = path.join(__dirname, '../public/quran_knowledge_base.json');
 const outputPath = path.join(__dirname, '../src/data/quran_english.json');
 
 function cleanText(text) {
-    return text.replace(/\n\n-- \d+ of \d+ --\n\n/g, ' ') // Remove page markers
+    return text.replace(/\s*--\s+\d+\s+of\s+\d+\s+--\s*/g, ' ') // Remove page markers loosely
+        .replace(/\*\*\*/g, '') // Remove *** separators
         .replace(/\[\d+\]/g, '') // Remove footnotes like [3]
         .replace(/\n/g, ' ') // Join lines
         .replace(/\s+/g, ' ') // Normalize spaces
