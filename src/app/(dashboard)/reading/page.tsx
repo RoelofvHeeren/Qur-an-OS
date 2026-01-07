@@ -35,6 +35,7 @@ type PageData = {
 const MAX_CHARS_PER_PAGE = 725; // Adjusted for perfect balance
 
 export default function ReadingPage() {
+    console.log("[QuranOS] BookView Upgrade v3 Loaded");
     // Transform Quran Data into Pages
     const pages = useMemo(() => {
         const allPages: PageData[] = [];
