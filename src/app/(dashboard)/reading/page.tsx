@@ -32,10 +32,10 @@ type PageData = {
 };
 
 // Configuration
-const MAX_CHARS_PER_PAGE = 600; // Drastically reduced for guaranteed whitespace
+const MAX_CHARS_PER_PAGE = 1000; // Increased for wider layout
 
 export default function ReadingPage() {
-    console.log("[QuranOS] BookView Upgrade v3 Loaded");
+    console.log("[QuranOS] BookView Upgrade v4 (Wide) Loaded");
     // Transform Quran Data into Pages
     const pages = useMemo(() => {
         const allPages: PageData[] = [];
@@ -69,7 +69,7 @@ export default function ReadingPage() {
 
                 while (currentVerseIndex < totalVerses) {
                     const verse = surah.verses[currentVerseIndex];
-                    const verseWeight = verse.text.length + 150; // High padding weight
+                    const verseWeight = verse.text.length + 100; // High padding weight
 
                     if (currentWeight + verseWeight > MAX_CHARS_PER_PAGE && pageVerses.length > 0) {
                         break;
@@ -96,8 +96,8 @@ export default function ReadingPage() {
                     if (!page) return <div className="w-full h-full bg-[#FFFDF9]" />;
 
                     return (
-                        <div className="w-full h-full px-12 py-16 flex flex-col items-center overflow-hidden">
-                            <div className="w-full max-w-xl h-full flex flex-col">
+                        <div className="w-full h-full px-16 py-20 flex flex-col items-center overflow-hidden">
+                            <div className="w-full max-w-3xl h-full flex flex-col">
                                 {page.surahInfo && (
                                     <div className="mb-12 text-center border-b-2 border-gray-100 pb-8 shrink-0">
                                         <div className="flex items-center justify-center gap-3 mb-4">

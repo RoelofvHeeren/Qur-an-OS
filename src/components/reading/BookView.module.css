@@ -63,6 +63,7 @@
     border: none;
 }
 
+/* Page Faces */
 .pageFront,
 .pageBack {
     position: absolute;
@@ -71,14 +72,21 @@
     width: 100%;
     height: 100%;
     background: #FFFDF9;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
     border: 1px solid #EAE6DF;
+    overflow: hidden;
+}
+
+.pageFront {
+    z-index: 2;
+    /* Always strictly on top of back in DOM order consideration */
 }
 
 .pageBack {
     transform: rotateY(180deg);
     border-radius: 4px 0 0 4px;
+    z-index: 1;
 }
 
 .pageFront {
